@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pendataan Pedagang Wahyuni</title>
+  <style>
+
+  </style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+
+<body>
+  <h1>PENDATAAN PEDAGANG</h1>
+  <form>
+
+    <label for="nama_produk">Nama Produk :</label><br>
+    <input type="text" id="inputNamaProduk" name="nama_produk"><br>
+
+    <label for="nama_pedagang">Nama Pedagang :</label><br>
+    <input type="text" id="inputNamaPedagang" name="nama_pedagang"><br>
+
+    <label for="lokasi">Lokasi :</label><br>
+    <input type="text" id="inputLokasi" name="lokasi"><br>
+
+    <label for="kontak">Kontak :</label><br>
+    <input type="number" id="inputKontak" name="kontak"><br>
+
+    <label for="jumlah_produk">Jumlah Produk :</label><br>
+    <input type="number" id="inputjumlah_produk" name="jumlah_produk"><br>
+
+    <button type="button" onclick="saveData()" id="button">Simpan</button>
+
+
+  </form>
+
+  <h1>Data Pedagang</h1>
+  <table class="table table-dark table-hover">
+    <thead >
+      <tr>
+        <th>No.</th>
+        <th>Nama Produk</th>
+        <th>Nama Pedagang</th>
+        <th>Lokasi</th>
+        <th>Kontak</th>
+        <th>Jumlah Produk</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="result">
+
+    </tbody>
+  </table>
+
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
+  <script>
+    const getData = async () => {
+      axios
+        .get(`http://103.163.110.11:3031/sellers`)
+        .then((response) => {
+          let bucket = ``;
+          let sellers = response.data;
+          if (sellers && sellers.length > 0) {
+            for (let i = 0; i < sellers.length; i++) {
+              bucket += `
+            <tr>
+              <td>${i + 1}</td>
+              <td>${sellers[i].nama_produk}</td>
+              <td>${sellers[i].nama_pedagang}</td>
+              <td>${sellers[i].lokasi}</td>
+              <td>${sellers[i].kontak}</td>
+              <td>${sellers[i].jumlah_produk}</td>
+              <td>
+                <button onclick="editData('${sellers[i].id}', '${sellers[i].nama_produk
+                }', '${sellers[i].nama_pedagang}', '${sellers[i].lokasi
+                }', '${sellers[i].kontak}', '${sellers[i].jumlah_produk}')">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+
+                <button onclick="deleteData(${sellers[i].id})">
+                  <i class="fas fa-trash"></i> Delete
+                </button>
+              </td>
+            </tr>`;
+            }
+          } else {
+            bucket += `
+          <tr>
+            <td colspan="7" style="text-align: center">Data Tidak Ditemukan</td>
+          </tr>`;
+          }
+          document.getElementById("result").innerHTML = bucket;
+        })
+        .catch((error) => {
+          let bucket = `
+          <tr>
+            <td colspan="7" style="text-align: center">${error.message}</td>
+          </tr>`;
+          document.getElementById("result").innerHTML = bucket;
+        });
+    };
+
+    const saveData = async () => {
+      let nama_produk = document.getElementById("inputNamaProduk").value;
+      let nama_pedagang = document.getElementById("inputNamaPedagang").value;
+      let lokasi = document.getElementById("inputLokasi").value;
+      let kontak = document.getElementById("inputKontak").value;
+      let jumlah_produk = document.getElementById("inputjumlah_produk").value;
+
+      if (nama_produk && nama_pedagang && lokasi && kontak && jumlah_produk) {
+        await axios
+          .post(`http://103.163.110.11:3031/sellers`, {
+            nama_produk: nama_produk,
+            nama_pedagang: nama_pedagang,
+            lokasi: lokasi,
+            kontak: kontak,
+            jumlah_produk: jumlah_produk,
+          })
+          .then((response) => {
+            getData();
+            document.getElementById("inputNamaProduk").value = "";
+            document.getElementById("inputNamaPedagang").value = "";
+            document.getElementById("inputLokasi").value = "";
+            document.getElementById("inputKontak").value = "";
+            document.getElementById("inputjumlah_produk").value = "";
+            alert("Sukses Disimpan");
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
+      } else {
+        alert("Mohon isi semua field sebelum menyimpan data");
+      }
+    };
+
+    const deleteData = async (id) => {
+      await axios
+        .delete(`http://103.163.110.11:3031/sellers/${id}`)
+        .then((response) => {
+          getData();
+          alert("Succes delete");
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    };
+
+    const editData = (id, nama_produk, nama_pedagang, lokasi, kontak, jumlah_produk) => {
+      document.getElementById("inputNamaProduk").value = nama_produk;
+      document.getElementById("inputNamaPedagang").value = nama_pedagang;
+      document.getElementById("inputLokasi").value = lokasi;
+      document.getElementById("inputKontak").value = kontak;
+      document.getElementById("inputjumlah_produk").value = jumlah_produk;
+      document.getElementById("button").innerText = "Ubah";
+      document
+        .getElementById("button")
+        .setAttribute("onclick", `updateData(${id})`);
+    };
+
+    const updateData = async (id) => {
+      let nama_produk = document.getElementById("inputNamaProduk").value;
+      let nama_pedagang = document.getElementById("inputNamaPedagang").value;
+      let lokasi = document.getElementById("inputLokasi").value;
+      let kontak = document.getElementById("inputKontak").value;
+      let jumlah_produk = document.getElementById("inputjumlah_produk").value;
+
+      if (nama_produk && nama_pedagang && lokasi && kontak && jumlah_produk) {
+        await axios
+          .patch(`http://103.163.110.11:3031/sellers/${id}`, {
+            nama_produk: nama_produk,
+            nama_pedagang: nama_pedagang,
+            lokasi: lokasi,
+            kontak: kontak,
+            jumlah_produk: jumlah_produk,
+          })
+          .then((response) => {
+            getData();
+            document.getElementById("inputNamaProduk").value = "";
+            document.getElementById("inputNamaPedagang").value = "";
+            document.getElementById("inputLokasi").value = "";
+            document.getElementById("inputKontak").value = "";
+            document.getElementById("inputjumlah_produk").value = "";
+            document.getElementById("button").innerText = "Tambah Produk";
+            document
+              .getElementById("button")
+              .setAttribute("onclick", "saveData()");
+            alert("Berhasil di Edit");
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
+      } else {
+        alert("Mohon isi semua field sebelum mengubah data");
+      }
+    };
+
+    getData();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</body>
+
+</html>
