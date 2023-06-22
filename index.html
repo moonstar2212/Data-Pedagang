@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+  
 
 <head>
   <meta charset="UTF-8">
@@ -13,30 +14,37 @@
 </head>
 
 <body>
-  <h1>PENDATAAN PEDAGANG</h1>
-  <form>
+  <h1 class="text-center">PENDATAAN PEDAGANG</h1>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-3 align-self-center">
 
-    <label for="nama_produk">Nama Produk :</label><br>
-    <input type="text" id="inputNamaProduk" name="nama_produk"><br>
+        <div class="mb-3">
+          <label for="nama_produk" class="form-label">Nama Produk :</label>
+          <input type="text" class="form-control" id="inputNamaProduk" name="nama_produk">
+      
+          <label for="nama_pedagang" class="form-label">Nama Pedagang :</label><br>
+          <input type="text" class="form-control" id="inputNamaPedagang" name="nama_pedagang">
+      
+          <label for="lokasi" class="form-label">Lokasi :</label>
+          <input type="text" class="form-control" id="inputLokasi" name="lokasi">
+      
+          <label for="kontak" class="form-label">Kontak :</label>
+          <input type="number" class="form-control" id="inputKontak" name="kontak">
+      
+          <label for="jumlah_produk" class="form-label">Jumlah Produk :</label>
+          <input type="number" class="form-control" id="inputjumlah_produk" name="jumlah_produk">
+        
+          <button type="button" class="btn btn-primary" onclick="saveData()" id="button">Simpan</button>
+          
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
 
-    <label for="nama_pedagang">Nama Pedagang :</label><br>
-    <input type="text" id="inputNamaPedagang" name="nama_pedagang"><br>
-
-    <label for="lokasi">Lokasi :</label><br>
-    <input type="text" id="inputLokasi" name="lokasi"><br>
-
-    <label for="kontak">Kontak :</label><br>
-    <input type="number" id="inputKontak" name="kontak"><br>
-
-    <label for="jumlah_produk">Jumlah Produk :</label><br>
-    <input type="number" id="inputjumlah_produk" name="jumlah_produk"><br>
-
-    <button type="button" onclick="saveData()" id="button">Simpan</button>
-
-
-  </form>
-
-  <h1>Data Pedagang</h1>
+  <h1 class="text-center">Data Pedagang</h1>
   <table class="table table-dark table-hover">
     <thead>
       <tr>
@@ -55,7 +63,9 @@
   </table>
 
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+  crossorigin="anonymous"></script>
 
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
@@ -77,13 +87,13 @@
               <td>${sellers[i].kontak}</td>
               <td>${sellers[i].jumlah_produk}</td>
               <td>
-                <button onclick="editData('${sellers[i].id}', '${sellers[i].nama_produk
+                <button type="button" class="btn btn-secondary" onclick="editData('${sellers[i].id}', '${sellers[i].nama_produk
                 }', '${sellers[i].nama_pedagang}', '${sellers[i].lokasi
                 }', '${sellers[i].kontak}', '${sellers[i].jumlah_produk}')">
                   <i class="fas fa-edit"></i> Edit
                 </button>
 
-                <button onclick="deleteData(${sellers[i].id})">
+                <button type="button" class="btn btn-danger" onclick="deleteData(${sellers[i].id})">
                   <i class="fas fa-trash"></i> Delete
                 </button>
               </td>
@@ -205,9 +215,7 @@
 
     getData();
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-    crossorigin="anonymous"></script>
+  
 </body>
 
 </html>
